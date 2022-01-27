@@ -52,7 +52,22 @@ function MapWrapper({ data }) {
   // Cambiar Zoom del mapa
   const handleChangeZoom = () => {
     if (mapInstance) {
-      addZoom(mapInstance.getZoom());
+      // Cambiamos el zoom del estado
+      dispatch({ type: "ADD_ZOOM", payload: mapInstance.getZoom() });
+    }
+  };
+
+  const handleChangeDrag = () => {
+    if (mapInstance) {
+      // Cambiamos las coordenadas
+      dispatch({
+        type: "ADD_COORDS",
+        payload: {
+          alt: state.coords.alt,
+          lat: mapInstance.getCenter().lat(),
+          lng: mapInstance.getCenter().lng(),
+        },
+      });
     }
   };
   // Terminar de dibujar un poligono
@@ -127,7 +142,7 @@ function MapWrapper({ data }) {
           onLoad={onLoad}
           onUnmount={onUnmount}
           onZoomChanged={handleChangeZoom}
-          // onDragEnd={handleCenterChange}
+          onDragEnd={handleChangeDrag}
         >
           <DrawingManager
             onPolygonComplete={handleCompletePolygon}
